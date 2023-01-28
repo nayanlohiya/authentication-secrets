@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
-// var encrypt = require('mongoose-encryption');
+var encrypt = require('mongoose-encryption');
 
 const app = express();
 
@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
     password: String
 });
 
-// const secret = "Thisisourlittlesecret.";    // this lis level2 mongoose encryption
-// userSchema.plugin(encrypt, { secret: secret , encryptedFields: ['password']});
+const secret = "Thisisourlittlesecret.";    // this lis level2 mongoose encryption
+userSchema.plugin(encrypt, { secret: secret , encryptedFields: ['password']});
 
 const User = mongoose.model("User", userSchema);
 
