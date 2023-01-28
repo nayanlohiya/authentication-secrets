@@ -1,12 +1,15 @@
 //jshint esversion:6
-
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
 var encrypt = require('mongoose-encryption');
-
+// if you have to push anything or commit anything so as to display in github use " git push --verbose origin main"
 const app = express();
+
+
+console.log(process.env.API_KEY);
 
 app.set('view engine', 'ejs');
 
@@ -22,8 +25,8 @@ const userSchema = new mongoose.Schema({
     password: String
 });
 
-const secret = "Thisisourlittlesecret.";    // this lis level2 mongoose encryption
-userSchema.plugin(encrypt, { secret: secret , encryptedFields: ['password']});
+ // this lis level2 mongoose encryption
+userSchema.plugin(encrypt, { secret: process.env.SECRET , encryptedFields: ['password']});
 
 const User = mongoose.model("User", userSchema);
 
