@@ -1,15 +1,18 @@
 //jshint esversion:6
-require('dotenv').config()
+// if you have to push anything or commit anything so as to display in github use " git push --verbose origin main"
+
+require('dotenv').config()      // we created .env and .gitignore so as to hise secret and .env on github
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
-var encrypt = require('mongoose-encryption');
-// if you have to push anything or commit anything so as to display in github use " git push --verbose origin main"
+ // this lis level2 mongoose encryption
+// var encrypt = require('mongoose-encryption');
+// this lis level3 hashing password
+const md5 = require('md5');
 const app = express();
 
-
-console.log(process.env.API_KEY);
+console.log(md5('12345'));
 
 app.set('view engine', 'ejs');
 
@@ -26,7 +29,7 @@ const userSchema = new mongoose.Schema({
 });
 
  // this lis level2 mongoose encryption
-userSchema.plugin(encrypt, { secret: process.env.SECRET , encryptedFields: ['password']});
+// userSchema.plugin(encrypt, { secret: process.env.SECRET , encryptedFields: ['password']});
 
 const User = mongoose.model("User", userSchema);
 
@@ -43,7 +46,7 @@ app.get("/register",function(req,res){
 app.post("/register",function(req,res){
   const newUser = new User({
       email: req.body.username,
-      password: req.body.password
+      password: md5(req.body.password)
   });
   newUser.save(function(err){
   if(err){
@@ -57,7 +60,7 @@ app.post("/register",function(req,res){
 
 app.post("/login",function(req,res){
   const  username = req.body.username;
-  const  password = req.body.password;
+  const  password = md5(req.body.password);
   User.findOne(function(err,foundUser){
   if(err){
     console.log(err);
